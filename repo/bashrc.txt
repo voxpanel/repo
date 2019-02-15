@@ -1,0 +1,84 @@
+# /etc/bashrc
+
+# System wide functions and aliases
+# Environment stuff goes in /etc/profile
+
+# For some unknown reason bash refuses to inherit
+# PS1 in some circumstances that I can't figure out.
+# Putting PS1 here ensures that it gets loaded every time.
+alias which="type -path"
+export EDITOR="pico"
+export VISUAL="pico"
+PS1="\u@\h [\w]# "
+
+whoami=`whoami`
+if [ -e "~/.dns" ]; then
+	DNS=`cat ~/.dns`
+	PS1="\u@$DNS [\w]# "
+else
+	if [ -e "/var/cpanel/users/$whoami" ]; then
+		eval `grep DNS= /var/cpanel/users/$whoami`
+
+		if [ ! "$DNS" = "" ]; then
+			echo -n "$DNS" > ~/.dns
+			PS1="\u@$DNS [\w]# "
+		fi
+	fi
+fi
+
+if [ ! -e ~/public_html/cgi-bin ]; then
+        mkdir -p ~/public_html/cgi-bin
+fi
+if [ ! -e ~/public_ftp ]; then
+        mkdir -p ~/public_ftp
+fi
+
+mesg y
+
+alias wtf="watch -n 1 w -hs"
+alias wth="ps -uxa | more"
+# Now for the dos users
+alias dir="ls"
+alias copy="cp"
+alias del="rm"
+alias deltree="rm -r"
+alias move="mv"
+alias ff="whereis"
+alias attrib="chmod"
+alias edit="pico"
+alias chdir="cd"
+alias mem="top"
+alias search="grep"
+alias pico="pico -w -z"
+
+
+LS_OPTIONS='--color=tty -F -a -b -T 0 -l -h';
+export LS_OPTIONS;
+alias ls='/bin/ls $LS_OPTIONS';
+alias dir='/bin/ls $LS_OPTIONS --format=vertical';
+alias vdir='/bin/ls $LS_OPTIONS --format=long';
+alias d=dir;
+alias v=vdir;
+eval `dircolors -b`
+
+
+export JAVA_HOME=/usr/local/jdk
+export PATH=$JAVA_HOME/bin:$PATH
+export CLASSPATH=.:$JAVA_HOME/lib/classes.zip
+export PATH="$PATH:/usr/local/bin:/usr/X11R6/bin"
+
+#cPanel Added Limit Protections -- BEGIN
+
+#unlimit so we can run the whoami
+ulimit -n 4096 -u 14335 -m unlimited -d unlimited -s 8192 -c 1000000 -v unlimited 2>/dev/null
+
+LIMITUSER=$USER
+if [ -e "/usr/bin/whoami" ]; then
+        LIMITUSER=`/usr/bin/whoami`
+fi
+if [ "$LIMITUSER" != "root" ]; then
+        ulimit -n 100 -u 20 -m 200000 -d 200000 -s 8192 -c 200000 -v 200000 2>/dev/null
+else
+        ulimit -n 4096 -u 14335 -m unlimited -d unlimited -s 8192 -c 1000000 -v unlimited 2>/dev/null
+fi
+#cPanel Added Limit Protections -- END

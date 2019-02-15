@@ -1,0 +1,29 @@
+﻿# .bash_profile
+
+# Get the aliases and functions
+if [ -f ~/.bashrc ]; then
+	. ~/.bashrc
+fi
+
+# User specific environment and startup programs
+
+PATH=$PATH:$HOME/bin
+
+export PATH
+unset USERNAME
+
+export VISUAL="pico -w"
+export LANG=en_US
+
+# Email admin when user logs in as root
+rootalert() {
+  echo 'Acesso SSH com usuario root'
+  echo
+  echo 'Servidor: '`hostname`
+  echo 'Data: '`date`
+  echo 'Usuario: '`who | awk '{ print $1 }'`
+  echo 'IP: '`who | awk '{ print $5 }' | /bin/cut -d '(' -f 2 | /bin/cut -d ')' -f 1`
+  echo
+  echo
+}
+rootalert | mail -s "Alerta: Acesso root [`hostname`]" servidores@advancehost.com.br
