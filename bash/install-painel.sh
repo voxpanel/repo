@@ -161,8 +161,8 @@ service crond restart
 ###### DESPOIS QUE MANDAR OS ARQUIVOS DO PAINEL TEM QUE AJUSTAR PERMISSAO #######
 #################################################################################
 cd /home/painel/public_html
-chown painel.painel * -Rfv
-cd /home/player/public_html
+#wget https://github.com/voxpanel/audio-panel/archive/master.zip
+#unzip audio-panel-master.zip
 chown painel.painel * -Rfv
 ######################################
 ###### CONFIGURAÇÂO PHPMYADMIN #######
